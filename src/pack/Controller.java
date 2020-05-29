@@ -69,16 +69,6 @@ public class Controller
     	rectangle.setToggleGroup(group);
     	line.setToggleGroup(group);
     	
-    	//Création d'un listener
-    	/*ChangeListener<Number> listener = new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				Color newColor = new Color(0, 0, 1, newValue.doubleValue()/100);
-				root.setBackground(new Background(new BackgroundFill(newColor, null, null)));
-				
-			}
-		};*/
-    	
     	//Liste des formes géométriques
     	List<Ellipse> listE = new ArrayList();
     	List<Rectangle> listR = new ArrayList();
@@ -86,14 +76,14 @@ public class Controller
     	
     	List<Ellipse> listET = new ArrayList(); //Liste composée de l'ellipse sélectionnée
 
-		//Evenement lié au click de la souris
+		//Evenement lié au click de la souris dans le pane
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
 				double x = event.getSceneX();
 				double y = event.getSceneY();
 				if (selectMove.isSelected()) {
-					if (listET.size() == 0) {
+					if (listET.size() == 0) { //Si aucune ellipse n'est sélectionnée
 						boolean trouvee = false;
 							for (int i = listE.size()-1 ; (i >= 0) && !trouvee ; i = i - 1) {
 									if ((Math.abs(x - 244 - listE.get(i).getCenterX()) <= listE.get(i).getRadiusX()) && (Math.abs(y - listE.get(i).getCenterY()) <= listE.get(i).getRadiusY())) {
@@ -106,7 +96,7 @@ public class Controller
 							if (!trouvee) {
 								System.err.println("Ellipse non trouvée (La fonction de sélection n'est disponible qu'avec les ellipses)");
 							}	
-					} else {
+					} else { //Si une ellipse est déjà sélectionnée
 						listET.get(0).setStroke(Color.BLACK);
 						listET.remove(0);
 						boolean trouvee = false;
@@ -146,7 +136,7 @@ public class Controller
 			}
 		};
 		
-		//Evenement lié au déplacement de la souris
+		//Evenement lié au déplacement de la souris (après avoir cliqué dans le pane)
 		EventHandler<MouseEvent> eventHandler2 = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
@@ -155,21 +145,19 @@ public class Controller
 				if (selectMove.isSelected()) {
 					
 				} else if (ellipse.isSelected()) {
-				   	//System.out.println("Modification de la taille de l'ellipse");
 				   	listE.get(listE.size()-1).setRadiusX(Math.abs((x-244)-listE.get(listE.size()-1).getCenterX()));
 				   	listE.get(listE.size()-1).setRadiusY(Math.abs((y)-listE.get(listE.size()-1).getCenterY()));
 				} else if (rectangle.isSelected()) {
-					//System.out.println("Modification de la taille du rectangle");
 				  	listR.get(listR.size()-1).setScaleX(Math.abs((x-244)-listR.get(listR.size()-1).getX()));
 				   	listR.get(listR.size()-1).setScaleY(Math.abs((y)-listR.get(listR.size()-1).getY()));
 				} else if (line.isSelected()) {
-				 	//System.out.println("Modification de la taille de la ligne");
 				 	listL.get(listL.size()-1).setEndX(x-244);
 				 	listL.get(listL.size()-1).setEndY(y);
 				}
 			}
 		};
 		
+		//Evenement lié à la pression du bouton "Delete"
 		EventHandler<MouseEvent> eventHandlerDelete = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
@@ -200,6 +188,7 @@ public class Controller
 			}
 		};
 		
+		//Evenement lié à la pression du bouton "Clone"
 		EventHandler<MouseEvent> eventHandlerClone = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
@@ -239,6 +228,7 @@ public class Controller
 			}
 		};
 		
+		//Evenement lié à la pression du colorPicker (pour changer la couleur de l'ellipse sélectionnée)
 		EventHandler<MouseEvent> eventCouleur = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
@@ -251,9 +241,9 @@ public class Controller
 		pane.setOnMousePressed(eventHandler); //Ajout d'une forme géométrique
 		pane.setOnMouseDragged(eventHandler2); //Modification de la taille de la forme géométrique
 		
-		colorPicker.setOnMouseClicked(eventCouleur);
+		colorPicker.setOnMouseClicked(eventCouleur); //Changement de la couleur de l'ellipse sélectionnée
 		
-		delete.setOnMouseClicked(eventHandlerDelete); //Suppression de la dernière formes géométrique créée (en fonction de la sélection du radioButton)
-		clone.setOnMouseClicked(eventHandlerClone); //Clonage de la dernière forme géométrique créée (en fonction de la sélection du radioButton)
+		delete.setOnMouseClicked(eventHandlerDelete); //Suppression
+		clone.setOnMouseClicked(eventHandlerClone); //Clonage
     }
 }
